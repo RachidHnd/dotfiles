@@ -1,3 +1,58 @@
 vim.g.mapleader = " "
 
+
 require("plugins.lazy")
+
+vim.api.nvim_set_keymap('n', '<C-d>', '<NOP>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', '<C-d>', '<NOP>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<C-d>', '<NOP>', { noremap = true, silent = true })
+-- Example mappings using the leader key
+vim.api.nvim_set_keymap('n', '<leader>ff', '<cmd>Telescope find_files<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<leader>fg', '<cmd>Telescope live_grep<CR>', { noremap = true, silent = true })
+
+
+-- Toggle the tree visibility
+vim.api.nvim_set_keymap('n', '<C-n>', ':NvimTreeToggle<CR>', { noremap = true, silent = true })
+
+-- Find the current file in the tree
+vim.api.nvim_set_keymap('n', '<leader>f', ':NvimTreeFindFile<CR>', { noremap = true, silent = true })
+
+-- Refresh the tree to reflect any external changes
+vim.api.nvim_set_keymap('n', '<leader>r', ':NvimTreeRefresh<CR>', { noremap = true, silent = true })
+
+-- Create a new file in the directory
+vim.api.nvim_set_keymap('n', '<leader>n', ':NvimTreeCreate<CR>', { noremap = true, silent = true })
+
+-- Rename the selected file
+vim.api.nvim_set_keymap('n', '<leader>rn', ':NvimTreeRename<CR>', { noremap = true, silent = true })
+
+-- Delete the selected file
+vim.api.nvim_set_keymap('n', '<leader>d', ':NvimTreeRemove<CR>', { noremap = true, silent = true })
+
+-- Collapse all folders in the tree
+vim.api.nvim_set_keymap('n', '<leader>c', ':NvimTreeCollapse<CR>', { noremap = true, silent = true })
+
+-- Move up to the parent directory
+vim.api.nvim_set_keymap('n', '<leader>p', ':NvimTreeDirUp<CR>', { noremap = true, silent = true })
+
+-- Open the selected file or directory
+vim.api.nvim_set_keymap('n', '<CR>', ':NvimTreeOpen<CR>', { noremap = true, silent = true })
+
+-- Close the tree window if it’s the last one open
+vim.api.nvim_set_keymap('n', '<leader>q', ':NvimTreeClose<CR>', { noremap = true, silent = true })
+-- Focus on nvim-tree when you're in a file
+
+vim.api.nvim_set_keymap('n', '<leader>t', ':NvimTreeFocus<CR>', { noremap = true, silent = true })
+
+vim.g.clipboard = {
+  name = "win32yank",
+  copy = {
+    ["+"] = "win32yank.exe -i --crlf",
+    ["*"] = "win32yank.exe -i --crlf",
+  },
+  paste = {
+    ["+"] = "win32yank.exe -o --lf",
+    ["*"] = "win32yank.exe -o --lf",
+  },
+  cache_enabled = 0,
+}
