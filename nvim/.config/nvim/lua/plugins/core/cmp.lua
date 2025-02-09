@@ -34,12 +34,12 @@ return {
               fallback()
             end
           end, { "i", "s" }),
-        },
 	 ["<CR>"] = cmp.mapping.confirm({
             behavior = cmp.ConfirmBehavior.Replace,
             select = true, -- Select the first item if nothing is chosen
           }),
 	["<C-O"] = cmp.mapping.complete(),
+        },
         sources = cmp.config.sources({
           { name = "luasnip" },
           { name = "nvim_lsp" },

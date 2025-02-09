@@ -44,6 +44,14 @@ vim.api.nvim_set_keymap('n', '<leader>q', ':NvimTreeClose<CR>', { noremap = true
 
 vim.api.nvim_set_keymap('n', '<leader>t', ':NvimTreeFocus<CR>', { noremap = true, silent = true })
 
+-- Navigate to the next buffer
+vim.api.nvim_set_keymap('n', '<Tab>', ':BufferLineCycleNext<CR>', { noremap = true, silent = true })
+-- Navigate to the previous buffer
+vim.api.nvim_set_keymap('n', '<S-Tab>', ':BufferLineCyclePrev<CR>', { noremap = true, silent = true })
+-- Close the current buffer
+vim.api.nvim_set_keymap('n', '<Leader>bd', ':bdelete<CR>', { noremap = true, silent = true })
+
+
 vim.g.clipboard = {
   name = "win32yank",
   copy = {
