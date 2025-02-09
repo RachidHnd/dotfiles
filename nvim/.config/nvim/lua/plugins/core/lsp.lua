@@ -1,42 +1,44 @@
 return {
   {
     "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "williamboman/mason.nvim", "williamboman/mason-lspconfig.nvim" },
+    dependencies = { "williamboman/mason-lspconfig.nvim" },
     config = function()
       local lspconfig = require("lspconfig")
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
       -- HTML LSP (Django Templates)
       lspconfig.html.setup({
+        capabilities = capabilities,
         filetypes = { "html", "htmldjango" },
       })
 
-      -- Emmet for fast HTML editing
+      -- Emmet LSP for HTML/CSS editing
       lspconfig.emmet_ls.setup({
+        capabilities = capabilities,
         filetypes = { "html", "css", "scss", "javascriptreact", "htmldjango" },
       })
 
-      -- TypeScript LSP (for Alpine.js) [Updated from tsserver to ts_ls]
+      -- TypeScript/JavaScript LSP
       lspconfig.ts_ls.setup({
+        capabilities = capabilities,
         filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
       })
 
-      -- ESLint for Alpine.js
+      -- ESLint LSP
       lspconfig.eslint.setup({
+        capabilities = capabilities,
         filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
       })
 
       -- Python LSP
-      lspconfig.pylsp.setup({
+      lspconfig.pyright.setup({
+        capabilities = capabilities,
         settings = {
-          pylsp = {
-            plugins = {
-              pycodestyle = { enabled = true, maxLineLength = 88 }, -- Auto-formatting
-              pyflakes = { enabled = true }, -- Linting
-              jedi_completion = { enabled = true }, -- Autocompletion
-              jedi_hover = { enabled = true }, -- Hover documentation
-              jedi_symbols = { enabled = true, all_scopes = true }, -- Symbol support
-              mccabe = { enabled = false }, -- Cyclomatic complexity
+          python = {
+            analysis = {
+              autoSearchPaths = true,
+              useLibraryCodeForTypes = true,
+              diagnosticMode = "workspace",
             },
           },
         },

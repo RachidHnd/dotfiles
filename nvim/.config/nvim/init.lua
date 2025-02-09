@@ -10,6 +10,10 @@ vim.api.nvim_set_keymap('i', '<C-d>', '<NOP>', { noremap = true, silent = true }
 vim.api.nvim_set_keymap('n', '<leader>ff', '<cmd>Telescope find_files<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>fg', '<cmd>Telescope live_grep<CR>', { noremap = true, silent = true })
 
+-- Set relative numbers
+
+vim.o.number = true
+vim.o.relativenumber = true
 
 -- Toggle the tree visibility
 vim.api.nvim_set_keymap('n', '<C-n>', ':NvimTreeToggle<CR>', { noremap = true, silent = true })

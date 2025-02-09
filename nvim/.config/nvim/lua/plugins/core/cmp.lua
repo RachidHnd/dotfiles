@@ -2,8 +2,11 @@ return {
   {
     "hrsh7th/nvim-cmp",
     dependencies = {
-      "L3MON4D3/LuaSnip", -- Snippet Engine
-      "saadparwaiz1/cmp_luasnip", -- Completion Source for Snippets
+      "hrsh7th/cmp-nvim-lsp", -- LSP completion
+      "hrsh7th/cmp-buffer", -- Buffer completion
+      "hrsh7th/cmp-path", -- Path completion
+      "saadparwaiz1/cmp_luasnip", -- Snippet completion
+      "L3MON4D3/LuaSnip", -- Snippet engine
     },
     config = function()
       local cmp = require("cmp")
@@ -12,7 +15,7 @@ return {
       cmp.setup({
         snippet = {
           expand = function(args)
-            luasnip.lsp_expand(args.body)
+            luasnip.lsp_expand(args.body) -- Use LuaSnip for expanding snippets
           end,
         },
         mapping = {
@@ -34,17 +37,14 @@ return {
               fallback()
             end
           end, { "i", "s" }),
-	 ["<CR>"] = cmp.mapping.confirm({
-            behavior = cmp.ConfirmBehavior.Replace,
-            select = true, -- Select the first item if nothing is chosen
-          }),
-	["<C-O"] = cmp.mapping.complete(),
+          ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Confirm completion
+          ["<C-Space>"] = cmp.mapping.complete(), -- Manually trigger completion
         },
         sources = cmp.config.sources({
-          { name = "luasnip" },
-          { name = "nvim_lsp" },
-          { name = "buffer" },
-          { name = "path" },
+          { name = "nvim_lsp" }, -- LSP completion
+          { name = "luasnip" }, -- Snippet completion
+          { name = "buffer" }, -- Buffer completion
+          { name = "path" }, -- Path completion
         }),
       })
     end,
