@@ -9,9 +9,13 @@ return {
       -- HTML LSP (Django Templates)
       lspconfig.html.setup({
         capabilities = capabilities,
-        filetypes = { "html", "htmldjango" },
+        filetypes = { "html"},
       })
 
+      lspconfig.djlsp.setup({
+        capabilities = capabilities,
+        filetypes = { "htmldjango" },
+      })
       -- Emmet LSP for HTML/CSS editing
       lspconfig.emmet_ls.setup({
         capabilities = capabilities,

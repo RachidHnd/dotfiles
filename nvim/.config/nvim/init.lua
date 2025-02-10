@@ -3,14 +3,20 @@ vim.g.mapleader = " "
 
 require("plugins.lazy")
 
-vim.api.nvim_set_keymap('n', '<C-d>', '<NOP>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('v', '<C-d>', '<NOP>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('i', '<C-d>', '<NOP>', { noremap = true, silent = true })
+
+-- save on insert mode with ctrl+s 
+
+vim.api.nvim_set_keymap('i', '<C-s>', '<Esc>:w<CR>gi', { noremap = true, silent = true })
+
 -- Example mappings using the leader key
 vim.api.nvim_set_keymap('n', '<leader>ff', '<cmd>Telescope find_files<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>fg', '<cmd>Telescope live_grep<CR>', { noremap = true, silent = true })
 
--- Set relative numbers
+
+-- Make ctrl u and ctrl d set cursor in the middle
+vim.api.nvim_set_keymap('n', '<C-d>', '<C-d>zz', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-u>', '<C-u>zz', { noremap = true, silent = true })
+
 
 vim.o.number = true
 vim.o.relativenumber = true
