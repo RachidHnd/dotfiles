@@ -16,6 +16,11 @@ return {
         capabilities = capabilities,
         filetypes = { "htmldjango" },
       })
+
+      lspconfig.htmx.setup({
+	capabilities = capabilities,
+	filetypes = { "htmldjango","html"}
+      })
       -- Emmet LSP for HTML/CSS editing
       lspconfig.emmet_ls.setup({
         capabilities = capabilities,
