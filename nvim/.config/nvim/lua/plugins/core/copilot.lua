@@ -2,13 +2,24 @@ return {
   {
     "CopilotC-Nvim/CopilotChat.nvim",
     dependencies = {
-      { "github/copilot.vim" }, -- or zbirenbaum/copilot.lua
-      { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
+      { "github/copilot.vim" },       -- or "zbirenbaum/copilot.lua"
+      { "nvim-lua/plenary.nvim" },    -- no need to pin branch here
     },
-    build = "make tiktoken", -- Only on MacOS or Linux
+    build = "make tiktoken",          -- ok on Linux/macOS, or remove if you want
     opts = {
-      -- See Configuration section for options
+      window = {
+        layout = "vertical",          -- <--- was "right"
+        width = 0.35,                 -- 35% of the screen; tweak if you like
+      },
     },
-    -- See Commands section for default commands if you want to lazy load on them
+    config = function(_, opts)
+      local chat = require("CopilotChat")
+      chat.setup(opts)
+
+      -- simple keymap
+      vim.keymap.set("n", "<leader>cc", function()
+        chat.toggle()
+      end, { desc = "Copilot Chat" })
+    end,
   },
 }

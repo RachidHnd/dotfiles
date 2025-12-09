@@ -1,9 +1,8 @@
 vim.g.mapleader = " "
 
-
+require("config.ui")
 require("plugins.lazy")
-
-
+require("config.keymaps")
 -- save on insert mode with ctrl+s 
 
 vim.api.nvim_set_keymap('i', '<C-s>', '<Esc>:w<CR>gi', { noremap = true, silent = true })
@@ -28,7 +27,6 @@ vim.api.nvim_set_keymap('n', '<C-n>', ':NvimTreeToggle<CR>', { noremap = true, s
 vim.api.nvim_set_keymap('n', '<leader>f', ':NvimTreeFindFile<CR>', { noremap = true, silent = true })
 
 -- Refresh the tree to reflect any external changes
-vim.api.nvim_set_keymap('n', '<leader>r', ':NvimTreeRefresh<CR>', { noremap = true, silent = true })
 
 -- Create a new file in the directory
 vim.api.nvim_set_keymap('n', '<leader>n', ':NvimTreeCreate<CR>', { noremap = true, silent = true })
@@ -74,4 +72,4 @@ vim.g.clipboard = {
   },
   cache_enabled = 0,
 }
-
+vim.o.guifont = "FiraCode Nerd Font:h15"

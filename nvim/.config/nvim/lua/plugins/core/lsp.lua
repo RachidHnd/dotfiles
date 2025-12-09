@@ -1,46 +1,57 @@
 return {
   {
     "neovim/nvim-lspconfig",
-    dependencies = { "williamboman/mason-lspconfig.nvim" },
+    dependencies = { "williamboman/mason-lspconfig.nvim", "hrsh7th/cmp-nvim-lsp" },
     config = function()
-      local lspconfig = require("lspconfig")
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      --------------------------------------------------------------------
+      -- Capabilities (completion etc.)
+      --------------------------------------------------------------------
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      local ok, cmp_lsp = pcall(require, "cmp_nvim_lsp")
+      if ok then
+        capabilities = cmp_lsp.default_capabilities(capabilities)
+      end
 
-      -- HTML LSP (Django Templates)
-      lspconfig.html.setup({
+      --------------------------------------------------------------------
+      -- Per-server configuration using vim.lsp.config()
+      --------------------------------------------------------------------
+
+      -- HTML (for Django templates too)
+      vim.lsp.config("html", {
         capabilities = capabilities,
-        filetypes = { "html"},
+        filetypes = { "html" },
       })
 
-      lspconfig.djlsp.setup({
+      vim.lsp.config("djlsp", {
         capabilities = capabilities,
         filetypes = { "htmldjango" },
       })
 
-      lspconfig.htmx.setup({
-	capabilities = capabilities,
-	filetypes = { "htmldjango","html"}
+      vim.lsp.config("htmx", {
+        capabilities = capabilities,
+        filetypes = { "htmldjango", "html" },
       })
-      -- Emmet LSP for HTML/CSS editing
-      lspconfig.emmet_ls.setup({
+
+      -- Emmet
+      vim.lsp.config("emmet_ls", {
         capabilities = capabilities,
         filetypes = { "html", "css", "scss", "javascriptreact", "htmldjango" },
       })
 
-      -- TypeScript/JavaScript LSP
-      lspconfig.ts_ls.setup({
+      -- TypeScript / JavaScript
+      vim.lsp.config("ts_ls", {
         capabilities = capabilities,
         filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
       })
 
-      -- ESLint LSP
-      lspconfig.eslint.setup({
+      -- ESLint
+      vim.lsp.config("eslint", {
         capabilities = capabilities,
         filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
       })
 
-      -- Python LSP
-      lspconfig.pyright.setup({
+      -- Python
+      vim.lsp.config("pyright", {
         capabilities = capabilities,
         settings = {
           python = {
@@ -50,6 +61,23 @@ return {
               diagnosticMode = "workspace",
             },
           },
+        },
+      })
+
+      --------------------------------------------------------------------
+      -- Mason + mason-lspconfig setup (installs & enables servers)
+      --------------------------------------------------------------------
+      require("mason").setup()
+
+      require("mason-lspconfig").setup({
+        ensure_installed = {
+          "html",
+          "djlsp",
+          "htmx",
+          "emmet_ls",
+          "ts_ls",
+          "eslint",
+          "pyright",
         },
       })
     end,

@@ -1,25 +1,25 @@
-return({
+-- lua/plugins/core/theme.lua
+return {
   {
-    'Mofiqul/vscode.nvim',
+    "Mofiqul/vscode.nvim",
+    lazy = false,          -- load at startup
+    priority = 1000,       -- before other UI plugins
     config = function()
-      -- Enable true colors
-      vim.opt.termguicolors = true
-      
-      -- Set the colorscheme
-      vim.cmd('colorscheme vscode')
+      -- make sure Neovim uses 24-bit colors
+      vim.o.termguicolors = true
+      vim.o.background = "dark"   -- or "light" if you prefer
 
-      -- Optional: Set the variant (dark or light)
-      -- Uncomment one of the following lines based on preference:
-      
-      -- vim.g.vscode_style = "dark"  -- Dark mode
-      -- vim.g.vscode_style = "light" -- Light mode
-      
-      -- Optional: Enable transparent background
-      -- vim.g.vscode_transparent = 1
+      require("vscode").setup({
+        italic_comments   = true,
+        disable_nvimtree_bg = true,
+        color_overrides = {
+          vscLineNumber = "#5A5A5A",
+        },
+      })
 
-      -- Optional: Disable nvim-tree background color
-      -- vim.g.vscode_disable_nvimtree_bg = true
-    end
-  }
-})
+      -- explicitly apply the theme
+      vim.cmd.colorscheme("vscode")
+    end,
+  },
+}
 
