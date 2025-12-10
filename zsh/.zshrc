@@ -94,6 +94,17 @@ fi
 typeset -g POWERLEVEL9K_TRANSIENT_PROMPT=off
 
 
+# =======================[ 9. Screenshot automation ]========================
+# Windows-to-WSL2 screenshot automation
+if [[ -f "$HOME/.config/screenshot-automation/screenshot-functions.sh" ]]; then
+  source "$HOME/.config/screenshot-automation/screenshot-functions.sh"
+  
+  # Auto-start screenshot monitor if not already running (silent during shell init)
+  if ! pgrep -f "auto-clipboard-monitor" > /dev/null 2>&1; then
+    start-screenshot-monitor > /dev/null 2>&1
+  fi
+fi
+
 # bun completions
 [ -s "/home/hanra/.bun/_bun" ] && source "/home/hanra/.bun/_bun"
 
