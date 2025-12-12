@@ -16,6 +16,9 @@ return {
       local chat = require("CopilotChat")
       chat.setup(opts)
 
+      -- Disable Copilot suggestions by default
+      vim.g.copilot_enabled = false
+
       -- simple keymap
       vim.keymap.set("n", "<leader>cc", function()
         chat.toggle()

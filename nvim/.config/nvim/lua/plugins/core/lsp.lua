@@ -13,6 +13,20 @@ return {
       end
 
       --------------------------------------------------------------------
+      -- Diagnostic configuration (show inline error messages)
+      --------------------------------------------------------------------
+      vim.diagnostic.config({
+        virtual_text = {
+          prefix = "●",
+          source = "if_many",
+        },
+        signs = true,
+        underline = true,
+        update_in_insert = false,
+        severity_sort = true,
+      })
+
+      --------------------------------------------------------------------
       -- Per-server configuration using vim.lsp.config()
       --------------------------------------------------------------------
 
@@ -64,6 +78,12 @@ return {
         },
       })
 
+      -- C/C++
+      vim.lsp.config("clangd", {
+        capabilities = capabilities,
+        filetypes = { "c", "cpp", "objc", "objcpp" },
+      })
+
       --------------------------------------------------------------------
       -- Mason + mason-lspconfig setup (installs & enables servers)
       --------------------------------------------------------------------
@@ -78,6 +98,7 @@ return {
           "ts_ls",
           "eslint",
           "pyright",
+          "clangd",
         },
       })
     end,

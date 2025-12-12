@@ -144,3 +144,9 @@ vim.g.clipboard = {
 
 vim.o.guifont = "FiraCode Nerd Font:h15"
 
+-----------------------------------------------------------
+-- DEBUG KEYBINDINGS (VSCODE STYLE)
+-- Note: Main debug keybindings are defined in dap.lua plugin spec
+-- This ensures proper lazy-loading behavior
+-----------------------------------------------------------
+
