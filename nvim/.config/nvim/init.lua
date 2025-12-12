@@ -56,8 +56,17 @@ vim.api.nvim_set_keymap('n', '<leader>t', ':NvimTreeFocus<CR>', { noremap = true
 vim.api.nvim_set_keymap('n', '<Tab>', ':BufferLineCycleNext<CR>', { noremap = true, silent = true })
 -- Navigate to the previous buffer
 vim.api.nvim_set_keymap('n', '<S-Tab>', ':BufferLineCyclePrev<CR>', { noremap = true, silent = true })
--- Close the current buffer
-vim.api.nvim_set_keymap('n', '<Leader>bd', ':bdelete<CR>', { noremap = true, silent = true })
+-- Close the current buffer and focus on previous buffer (skip NvimTree)
+vim.keymap.set('n', '<Leader>bd', function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  vim.cmd('BufferLineCyclePrev')
+  -- If we landed on NvimTree, move again
+  if vim.bo.filetype == 'NvimTree' then
+    vim.cmd('BufferLineCycleNext')
+    vim.cmd('BufferLineCycleNext')
+  end
+  vim.cmd('bdelete ' .. bufnr)
+end, { noremap = true, silent = true, desc = "Close buffer" })
 
 
 vim.g.clipboard = {

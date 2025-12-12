@@ -31,8 +31,8 @@ start-screenshot-monitor() {
     echo "🔥 MAGIC WORKFLOW:"
     echo "   1. Take screenshot (Win+Shift+S, Win+PrintScreen, etc.)"
     echo "   2. Image automatically saved to $HOME/.screenshots/"
-    echo "   3. Path automatically copied to both Windows & WSL2 clipboards!"
-    echo "   4. Just Ctrl+V in Claude Code or any application!"
+    echo "   3. Windows clipboard keeps the image - paste anywhere in Windows!"
+    echo "   4. For WSL/Claude: Use 'paste-screenshot' command to get the file path"
     echo ""
     echo "📁 Images save to: $HOME/.screenshots/"
     echo "🔗 Latest always at: $HOME/.screenshots/latest.png"
@@ -50,9 +50,9 @@ stop-screenshot-monitor() {
 check-screenshot-monitor() {
     if pgrep -f "auto-clipboard-monitor" > /dev/null 2>&1; then
         echo "✅ Screenshot automation is running"
-        echo "🔥 Just take screenshots - everything is automatic!"
+        echo "🔥 Take screenshots - image stays in Windows clipboard!"
         echo "📁 Saves to: $HOME/.screenshots/"
-        echo "📋 Paths automatically copied to clipboard for easy pasting!"
+        echo "📋 Use 'paste-screenshot' to get WSL path for pasting here"
     else
         echo "❌ Screenshot automation not running"
         echo "💡 Start with: start-screenshot-monitor"
@@ -64,15 +64,21 @@ latest-screenshot() {
     echo "$HOME/.screenshots/latest.png"
 }
 
-# Copy latest image path to clipboard
-copy-latest-screenshot() {
+# Quick paste command - copies latest screenshot path to clipboard
+paste-screenshot() {
     if [ -f "$HOME/.screenshots/latest.png" ]; then
         echo "$HOME/.screenshots/latest.png" | clip.exe
-        echo "✅ Copied to clipboard: $HOME/.screenshots/latest.png"
+        echo "✅ Copied path to clipboard: $HOME/.screenshots/latest.png"
+        echo "📋 Now paste (Ctrl+V) in your terminal or application"
     else
         echo "❌ No latest screenshot found"
         echo "💡 Take a screenshot first (Win+Shift+S)"
     fi
+}
+
+# Copy latest image path to clipboard (same as paste-screenshot)
+copy-latest-screenshot() {
+    paste-screenshot
 }
 
 # Copy specific image path to clipboard
@@ -145,6 +151,7 @@ screenshot-help() {
     echo "  start-screenshot-monitor    - Start the automation"
     echo "  stop-screenshot-monitor     - Stop the automation"
     echo "  check-screenshot-monitor    - Check if running"
+    echo "  paste-screenshot            - Copy latest screenshot path to clipboard (quick access)"
     echo "  latest-screenshot           - Get path to latest screenshot"
     echo "  copy-latest-screenshot      - Copy latest screenshot path to clipboard"
     echo "  copy-screenshot <file>      - Copy specific screenshot path to clipboard"
@@ -156,14 +163,16 @@ screenshot-help() {
     echo "🔥 Quick start:"
     echo "  1. Run: start-screenshot-monitor"
     echo "  2. Take screenshots with Win+Shift+S"
-    echo "  3. Paths are automatically copied to clipboard!"
-    echo "  4. Just Ctrl+V in Claude Code!"
+    echo "  3. Paste image in Windows apps normally!"
+    echo "  4. For WSL/Claude: Run 'paste-screenshot' then Ctrl+V!"
 }
 
 # Aliases for convenience
 alias screenshots='list-screenshots'
 alias latest='latest-screenshot'
 alias copy-latest='copy-latest-screenshot'
+# NOTE: 'paste' alias removed - it was overwriting Windows clipboard with text!
+# Use 'paste-screenshot' explicitly if needed, or Ctrl+Shift+V in AHK
 alias start-screenshots='start-screenshot-monitor'
 alias stop-screenshots='stop-screenshot-monitor'
 alias check-screenshots='check-screenshot-monitor'

@@ -42,26 +42,8 @@ Write-Host "Monitoring clipboard events and directory changes..."
 $previousHash = $null
 $lastFileTime = Get-Date
 
-# Function to copy path to both clipboards
-function Set-BothClipboards($path) {
-    try {
-        [System.Windows.Forms.Clipboard]::SetText($path)
-        $wslCommand = "echo '$path' | clip.exe"
-        wsl.exe -d $WslDistro -e bash -c $wslCommand
-        return $true
-    } catch {
-        Start-Sleep -Milliseconds 200
-        try {
-            [System.Windows.Forms.Clipboard]::SetText($path)
-            $wslCommand = "echo '$path' | clip.exe" 
-            wsl.exe -d $WslDistro -e bash -c $wslCommand
-            return $true
-        } catch {
-            Write-Warning "Could not set clipboard: $_"
-            return $false
-        }
-    }
-}
+# Store the WSL path without modifying clipboard
+$global:LatestImagePath = $null
 
 while ($true) {
     try {
@@ -88,14 +70,13 @@ while ($true) {
                     if (Test-Path $latestPath) { Remove-Item $latestPath -Force }
                     Copy-Item $filepath $latestPath -Force
                     
-                    # Create full path for WSL2 instead of using tilde
+                    # Create full path for WSL2 - store but don't modify clipboard
                     $wslPath = "/home/$WslUsername/.screenshots/$filename"
-                    Start-Sleep -Milliseconds 1000
+                    $global:LatestImagePath = $wslPath
                     
-                    if (Set-BothClipboards $wslPath) {
-                        Write-Host "AUTO-SAVED: $filename"
-                        Write-Host "Path ready for Ctrl+V: $wslPath"
-                    }
+                    Write-Host "AUTO-SAVED: $filename"
+                    Write-Host "WSL path available: $wslPath"
+                    Write-Host "Windows clipboard still has the image for pasting!"
                     
                     $previousHash = $currentHash
                 }
@@ -111,14 +92,13 @@ while ($true) {
         
         if ($newFiles) {
             foreach ($file in $newFiles) {
-                # Create full path for WSL2 instead of using tilde
+                # Create full path for WSL2 - store but don't modify clipboard
                 $wslPath = "/home/$WslUsername/.screenshots/$($file.Name)"
+                $global:LatestImagePath = $wslPath
                 Copy-Item $file.FullName (Join-Path $SaveDirectory "latest.png") -Force
                 
-                if (Set-BothClipboards $wslPath) {
-                    Write-Host "NEW FILE DETECTED: $($file.Name)"
-                    Write-Host "Path ready for Ctrl+V: $wslPath"
-                }
+                Write-Host "NEW FILE DETECTED: $($file.Name)"
+                Write-Host "WSL path available: $wslPath"
             }
             $lastFileTime = $currentTime
         }

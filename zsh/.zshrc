@@ -11,6 +11,10 @@ export ZDOTDIR="$HOME"
 export EDITOR="nvim"
 export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 
+# True color support for WSL/Windows Terminal
+export COLORTERM=truecolor
+export TERM=xterm-256color
+
 # =======================[ 2. History ]=======================================
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=100000
@@ -96,13 +100,11 @@ typeset -g POWERLEVEL9K_TRANSIENT_PROMPT=off
 
 # =======================[ 9. Screenshot automation ]========================
 # Windows-to-WSL2 screenshot automation
+# Functions are available but monitor is NOT auto-started (AHK handles it)
 if [[ -f "$HOME/.config/screenshot-automation/screenshot-functions.sh" ]]; then
   source "$HOME/.config/screenshot-automation/screenshot-functions.sh"
-  
-  # Auto-start screenshot monitor if not already running (silent during shell init)
-  if ! pgrep -f "auto-clipboard-monitor" > /dev/null 2>&1; then
-    start-screenshot-monitor > /dev/null 2>&1
-  fi
+  # Remove the dangerous 'paste' alias that overwrites clipboard
+  unalias paste 2>/dev/null
 fi
 
 # bun completions

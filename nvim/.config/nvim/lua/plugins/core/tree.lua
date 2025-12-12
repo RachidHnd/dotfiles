@@ -30,6 +30,17 @@ return {
         indent_markers = { enable = true },
         icons = {
           show = { file = true, folder = true, git = true },
+          glyphs = {
+            git = {
+              unstaged = "✗",
+              staged = "✓",
+              unmerged = "",
+              renamed = "➜",
+              untracked = "★",
+              deleted = "",
+              ignored = "◌",
+            },
+          },
         },
       },
       filters = { dotfiles = false },
@@ -37,14 +48,34 @@ return {
         enable = true,
         update_cwd = true,
       },
+      git = {
+        enable = true,
+        ignore = false,
+        show_on_dirs = true,
+        show_on_open_dirs = true,
+        timeout = 400,
+      },
+      diagnostics = {
+        enable = true,
+        show_on_dirs = true,
+        icons = {
+          hint = "",
+          info = "",
+          warning = "",
+          error = "",
+        },
+      },
       on_attach = my_on_attach,
     })
-    -- Blend sidebar with theme
+    -- Blend sidebar with theme + git colors
     vim.cmd([[
       highlight NvimTreeNormal guibg=NONE
       highlight NvimTreeNormalNC guibg=NONE
       highlight NvimTreeWinSeparator guifg=#313244 guibg=NONE
+      highlight NvimTreeGitDirty guifg=#f9e2af
+      highlight NvimTreeGitStaged guifg=#a6e3a1
+      highlight NvimTreeGitNew guifg=#94e2d5
+      highlight NvimTreeGitDeleted guifg=#f38ba8
     ]])
   end,
 }
-
