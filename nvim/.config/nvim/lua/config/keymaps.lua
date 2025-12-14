@@ -72,13 +72,18 @@ map("v", "<A-l>", ">gv", opts)
 
 map("n", "<C-/>", "gcc", { noremap = false })
 map("v", "<C-/>", "gc", { noremap = false })
+map("i", "<C-/>", "<Esc>gccgi", { noremap = false })  -- Comment line and stay in insert
+-- Some terminals send Ctrl+_ instead of Ctrl+/
+map("n", "<C-_>", "gcc", { noremap = false })
+map("v", "<C-_>", "gc", { noremap = false })
+map("i", "<C-_>", "<Esc>gccgi", { noremap = false })
 
 -----------------------------------------------------------
 -- SPLITS (VSCODE STYLE)
 -----------------------------------------------------------
 
 map("n", "<C-\\>", ":vsplit<CR>", opts)
-map("n", "<C-_>", ":split<CR>", opts)   -- Ctrl+Shift+- split below
+map("n", "<leader>-", ":split<CR>", opts)   -- Horizontal split
 
 -----------------------------------------------------------
 -- FILE EXPLORER (NVIMTREE)

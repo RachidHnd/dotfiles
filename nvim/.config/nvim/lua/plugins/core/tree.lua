@@ -29,7 +29,8 @@ return {
         highlight_git = true,
         indent_markers = { enable = true },
         icons = {
-          show = { file = true, folder = true, git = true },
+          show = { file = true, folder = true, git = true, diagnostics = true },
+          diagnostics_placement = "signcolumn",
           glyphs = {
             git = {
               unstaged = "✗",
@@ -56,14 +57,7 @@ return {
         timeout = 400,
       },
       diagnostics = {
-        enable = true,
-        show_on_dirs = true,
-        icons = {
-          hint = "",
-          info = "",
-          warning = "",
-          error = "",
-        },
+        enable = false,
       },
       on_attach = my_on_attach,
     })

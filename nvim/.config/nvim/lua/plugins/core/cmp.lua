@@ -14,7 +14,7 @@ return {
 
       cmp.setup({
         completion = {
-          autocomplete = false, -- Disable automatic popup
+          autocomplete = { require("cmp.types").cmp.TriggerEvent.TextChanged }, -- Auto popup as you type
         },
         snippet = {
           expand = function(args)

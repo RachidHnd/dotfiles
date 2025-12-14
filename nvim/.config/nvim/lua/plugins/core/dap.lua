@@ -70,16 +70,15 @@ return {
           },
           {
             elements = {
-              { id = "repl", size = 0.5 },         -- Debug console/REPL
-              { id = "console", size = 0.5 },      -- Program output
+              { id = "console", size = 1.0 },      -- Program output (stdout/stderr)
             },
-            size = 10,
+            size = 15,
             position = "bottom",
           },
         },
         controls = {
           enabled = true,
-          element = "repl",
+          element = "console",
         },
         floating = {
           border = "rounded",
@@ -100,6 +99,19 @@ return {
       end
       dap.listeners.before.event_exited["dapui_config"] = function()
         dapui.close()  -- Auto-close when debugging ends
+      end
+
+      -- Auto-scroll console to bottom when output is added
+      dap.listeners.after.event_output["auto_scroll"] = function()
+        local wins = vim.api.nvim_list_wins()
+        for _, win in ipairs(wins) do
+          local buf = vim.api.nvim_win_get_buf(win)
+          local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+          if ft == "dapui_console" then
+            local line_count = vim.api.nvim_buf_line_count(buf)
+            vim.api.nvim_win_set_cursor(win, { line_count, 0 })
+          end
+        end
       end
 
       -----------------------------------------------------------
@@ -124,9 +136,22 @@ return {
       -----------------------------------------------------------
       -- KEYBINDINGS (VSCODE STYLE)
       -----------------------------------------------------------
-      vim.keymap.set('n', '<F5>', function() dap.continue() end, { desc = 'Debug: Start/Continue' })
+      vim.keymap.set('n', '<F5>', function()
+        -- Run make before starting debugger (only if not already debugging)
+        if dap.session() == nil then
+          vim.fn.system('make')
+          if vim.v.shell_error ~= 0 then
+            vim.notify('Make failed! Check build errors.', vim.log.levels.ERROR)
+            return
+          end
+        end
+        dap.continue()
+      end, { desc = 'Debug: Build & Start/Continue' })
       vim.keymap.set('n', '<S-F5>', function() dap.terminate() end, { desc = 'Debug: Stop' })
+      vim.keymap.set('n', '<F17>', function() dap.terminate() end, { desc = 'Debug: Stop' })  -- F17 = Shift+F5 in some terminals
+      vim.keymap.set('n', '<leader>dx', function() dap.terminate() end, { desc = 'Debug: Stop' })  -- Alternative
       vim.keymap.set('n', '<C-S-F5>', function() dap.restart() end, { desc = 'Debug: Restart' })
+      vim.keymap.set('n', '<leader>dR', function() dap.restart() end, { desc = 'Debug: Restart' })  -- Alternative
       vim.keymap.set('n', '<F9>', function() dap.toggle_breakpoint() end, { desc = 'Debug: Toggle Breakpoint' })
       vim.keymap.set('n', '<S-F9>', function()
         dap.set_breakpoint(vim.fn.input('Breakpoint condition: '))
@@ -140,6 +165,14 @@ return {
       vim.keymap.set('n', '<leader>dp', function() require('dap.ui.widgets').preview() end, { desc = 'Debug: Preview' })
       vim.keymap.set('n', '<leader>db', '<cmd>Telescope dap list_breakpoints<cr>', { desc = 'Debug: List Breakpoints' })
       vim.keymap.set('n', '<leader>dc', '<cmd>Telescope dap configurations<cr>', { desc = 'Debug: List Configurations' })
+      vim.keymap.set('n', '<leader>ds', function()
+        local var = vim.fn.input('Variable: ')
+        if var == '' then return end
+        local val = vim.fn.input('New value: ')
+        if val == '' then return end
+        dap.repl.execute('p ' .. var .. ' = ' .. val)
+        vim.notify('Set ' .. var .. ' = ' .. val, vim.log.levels.INFO)
+      end, { desc = 'Debug: Set variable value' })
 
       -----------------------------------------------------------
       -- CODELLDB ADAPTER (C/C++)
