@@ -137,13 +137,16 @@ return {
       -- KEYBINDINGS (VSCODE STYLE)
       -----------------------------------------------------------
       vim.keymap.set('n', '<F5>', function()
-        -- Run make before starting debugger (only if not already debugging)
+        -- Run CMake build before starting debugger (only if not already debugging)
         if dap.session() == nil then
-          vim.fn.system('make')
+          local build_cmd = 'cmake --build build'
+          vim.notify('Building with CMake...', vim.log.levels.INFO)
+          vim.fn.system(build_cmd)
           if vim.v.shell_error ~= 0 then
-            vim.notify('Make failed! Check build errors.', vim.log.levels.ERROR)
+            vim.notify('CMake build failed! Check build errors.', vim.log.levels.ERROR)
             return
           end
+          vim.notify('Build successful!', vim.log.levels.INFO)
         end
         dap.continue()
       end, { desc = 'Debug: Build & Start/Continue' })
@@ -191,11 +194,27 @@ return {
       -----------------------------------------------------------
       dap.configurations.c = {
         {
-          name = "Launch C Program (bin/main)",
+          name = "Launch C/C++ Program (CMake build)",
           type = "codelldb",
           request = "launch",
           program = function()
-            return vim.fn.getcwd() .. '/bin/main'
+            -- Try to find the executable in build directory
+            local cwd = vim.fn.getcwd()
+            local build_dir = cwd .. '/build/'
+            
+            -- Look for any executable in build/ directory
+            local handle = io.popen('find "' .. build_dir .. '" -maxdepth 1 -type f -executable 2>/dev/null')
+            if handle then
+              local result = handle:read("*a")
+              handle:close()
+              local executables = vim.split(result, '\n', { trimempty = true })
+              if #executables > 0 then
+                return executables[1]
+              end
+            end
+            
+            -- Fallback: ask user
+            return vim.fn.input('Path to executable: ', build_dir, 'file')
           end,
           cwd = '${workspaceFolder}',
           stopOnEntry = false,

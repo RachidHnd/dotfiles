@@ -6,25 +6,24 @@
 #SingleInstance Force
 Menu, Tray, Tip, Screenshot Helper: Ctrl+Shift+V to paste WSL path
 
-; Ctrl+Shift+V: Save clipboard image to WSL and paste the path
+; Ctrl+Shift+V: Save clipboard image to WSL and paste the path, OR paste text if no image
 ^+v::
-    ; Check if clipboard has an image
-    if (!DllCall("IsClipboardFormatAvailable", "uint", 2)) {
-        ToolTip, No image in clipboard!
-        SetTimer, RemoveToolTip, 2000
-        return
-    }
-    
-    ; Save image, set clipboard to path, then paste
-    wslPath := SaveAndSetClipboard()
-    
-    if (wslPath != "") {
-        ; Small delay then paste
-        Sleep, 100
-        Send, ^v
+    ; Check if clipboard has an image (CF_BITMAP = 2)
+    if (DllCall("IsClipboardFormatAvailable", "uint", 2)) {
+        ; Has image - save it and paste the path
+        wslPath := SaveAndSetClipboard()
+        
+        if (wslPath != "") {
+            ; Small delay then paste
+            Sleep, 100
+            Send, ^v
+        } else {
+            ToolTip, Failed to save image
+            SetTimer, RemoveToolTip, 2000
+        }
     } else {
-        ToolTip, Failed to save image
-        SetTimer, RemoveToolTip, 2000
+        ; No image - just do a normal paste (text or whatever is in clipboard)
+        Send, ^v
     }
     return
 
